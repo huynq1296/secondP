@@ -14,6 +14,7 @@ import {
     DropdownToggle,
 } from 'reactstrap';
 import {connect} from 'react-redux';
+import {changeVAT, changeDiscount} from 'actions/orderActions';
 
 
 class Utilities extends React.Component {
@@ -22,26 +23,14 @@ class Utilities extends React.Component {
         this.state = {
             VAT: 0,
             isLeftToggled: false,
-            isRightTggled: false
-        }
+            isRightToggled: false
+        };
         this.handleLeftToggle = this.handleLeftToggle.bind(this);
         this.handleRemoveGuest = this.handleRemoveGuest.bind(this);
         this.handleRightToggle = this.handleRightToggle.bind(this);
-        this.handle0VAT = this.handle0VAT.bind(this);
-        this.handle10VAT = this.handle10VAT.bind(this);
+
     }
-    handle0VAT(){
-        this.setState({
-           ...this.state,
-           VAT: 0
-        });
-    }
-    handle10VAT(){
-        this.setState({
-            ...this.state,
-            VAT: 10
-        });
-    }
+
     handleRemoveGuest() {
         let button = document.getElementById("UtilitiesJs-guestButton");
         button.style.display = "none";
@@ -53,6 +42,7 @@ class Utilities extends React.Component {
             isLeftToggled: !this.state.isLeftToggled
         })
     }
+
 
     handleRightToggle() {
         this.setState({
@@ -79,7 +69,7 @@ class Utilities extends React.Component {
                     <Col xs={5} className={"ml-auto d-flex align-items-center"}>
 
                         <div className={"mr-auto"}>Tổng thành tiền</div>
-                        <div className={"ml-auto"}>120000</div>
+                        <div className={"ml-auto"}>{this.props.cost}</div>
 
                     </Col>
                 </Row>
@@ -90,7 +80,8 @@ class Utilities extends React.Component {
                     <Col xs={5} className={"ml-auto d-flex"}>
                         <div className={"mr-auto p-0"} xs={6}>Chiết khấu</div>
                         <div className={"ml-auto p-0"} xs={6}>
-                            <Input type={"number"} name={"discount"} className={"p-0"}/>
+                            <Input type={"number"} name={"discount"} className={"p-0"} value={this.props.discount}
+                                   onChange={this.props.changeDiscount}/>
                         </div>
                     </Col>
                 </Row>
@@ -128,10 +119,10 @@ class Utilities extends React.Component {
                     <Col xs={5} className={"d-flex ml-auto"}>
                         <p>VAT</p>
                         <Button id={"UtilitiesJs-VATButton-0"} className={"p-0 ml-1"} color={"primary"}
-                                onClick={this.handle0VAT}>0%</Button>
+                                onClick={() => this.props.changeVAT(0)}>0%</Button>
                         <Button id={"UtilitiesJs-VATButton-10"} className={"p-0 ml-1"} color={"primary"}
-                                onClick={this.handle10VAT}>10%</Button>
-                        <p className={"ml-auto"}>{this.state.VAT}%</p>
+                                onClick={() => this.props.changeVAT(0.1)}>10%</Button>
+                        <p className={"ml-auto"}>{this.props.VAT * 100}%</p>
                     </Col>
                 </Row>
                 <Row className={"mb-1"}>
@@ -141,7 +132,7 @@ class Utilities extends React.Component {
                     </Col>
                     <Col xs={5} className={"ml-auto d-flex"}>
                         <p>Tổng cộng</p>
-                        <div className={"ml-auto"}>120000</div>
+                        <div className={"ml-auto"}>{this.props.total}</div>
                     </Col>
                 </Row>
                 <Row className={"mb-1"}>
@@ -172,10 +163,23 @@ class Utilities extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {}
+    return {
+        bill: state.order.bill,
+        cost: state.order.cost,
+        total: state.order.total,
+        VAT: state.order.vat,
+        discount: state.order.discount,
+    }
 };
 const mapDispatchToProps = (dispatch) => {
-    return {};
+    return {
+        changeVAT: (vat) => {
+            dispatch(changeVAT(vat))
+        },
+        changeDiscount: (event)=>{
+            dispatch(changeDiscount(event))
+        },
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Utilities);

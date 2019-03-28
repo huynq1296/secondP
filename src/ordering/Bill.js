@@ -1,7 +1,10 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {Table, Button} from 'reactstrap';
-import 'ordering/Bill.css'
-export default class Bill extends React.Component {
+import {removeDrink, increaseQuantity, decreaseQuantity} from 'actions/orderActions';
+import 'ordering/Bill.css';
+
+class Bill extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -13,39 +16,45 @@ export default class Bill extends React.Component {
                     <thead>
                     <tr>
                         <th>Ten</th>
-
                         <th className={"text-center"}>SL</th>
                         <th className={"text-center"}>Don Gia</th>
                         <th className={"text-center"}>Thanh Tien</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {this.props.order.map((row) => {
+                    {this.props.bill.map((drink) => {
                         return (
-                            <tr>
+                            <tr key={drink['name']}>
                                 <td>
                                     <div>
-                                        {row['name']}
+                                        {drink['name']}
                                     </div>
                                     <div className={"font-italic font-weight-light"}>
                                         Ghi chu:
                                         {(function () {
-                                        if (row['note'] == null) {
-                                            return " "+"None";
-                                        } else {
-                                            return " "+row['note'];
-                                        }
+                                            if (drink['note'] == null) {
+                                                return " " + "None";
+                                            } else {
+                                                return " " + drink['note'];
+                                            }
                                         })()}
 
                                     </div>
                                 </td>
-                                <td className={"text-center"}>{row['quantity']}</td>
-                                <td className={"text-center"}>{row['price']}</td>
+                                <td className={"text-center"}>
+                                    <Button color={"link"} onClick={() => this.props.inc(drink)}><i
+                                        className={"fa fa-plus"}/></Button>
+                                    {drink['quantity']}
+                                    <Button color={"link"} onClick={() => this.props.dec(drink)}><i
+                                        className={"fa fa-minus"}/></Button>
+                                </td>
+                                <td className={"text-center"}>{drink['price']}</td>
                                 <td className={"text-center"}>
                                     <span>
-                                    {row['total']}
+                                    {drink['total']}
                                     </span>
-                                    <Button className={"ml-1"} size={"sm"} color={"link"}>
+                                    <Button className={"ml-1"} size={"sm"} color={"link"}
+                                            onClick={() => this.props.remove(drink)}>
                                         <i className={"fa fa-trash"}></i>
                                     </Button>
                                 </td>
@@ -58,3 +67,23 @@ export default class Bill extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        bill: state.order.bill
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        remove: (drink) => {
+            dispatch(removeDrink(drink));
+        },
+        inc: (drink) => {
+            dispatch(increaseQuantity(drink));
+        },
+        dec: (drink) => {
+            dispatch(decreaseQuantity(drink));
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Bill);

@@ -10,29 +10,7 @@ export default class Content extends React.Component {
             <Container fluid className={"mt-1 bg-light"}>
                 <Row>
                     <Col xs={7}>
-                        <Bill order={
-                            [
-                                {
-                                    name: "abc",
-                                    quantity: 4,
-                                    price: 5,
-                                    total: 7,
-                                    note: "Khong duong"
-                                },
-                                {
-                                    name: "abc",
-                                    quantity: 4,
-                                    price: 5,
-                                    total: 7
-                                },
-                                {
-                                    name: "abc",
-                                    quantity: 4,
-                                    price: 5,
-                                    total: 7
-                                },
-                            ]
-                        }/>
+                        <Bill/>
                         <Utilities/>
                     </Col>
                     <Col xs={5}>
@@ -41,41 +19,41 @@ export default class Content extends React.Component {
                                 coffee: [
                                     {
                                         name: "ca phe den",
-                                        price: "20k",
+                                        price: 20000,
                                     },
                                     {
                                         name: "ca phe nau",
-                                        price: "25k"
+                                        price: 25000
                                     }
                                 ],
                                 tea: [
                                     {
                                         name: "trà ô long",
-                                        price: "30k"
+                                        price: 35000
                                     },
                                     {
                                         name: "trà râu xồm",
-                                        price: "-30k"
+                                        price: -30000
                                     }
                                 ],
                                 milk: [
                                     {
                                         name: "sữa tươi mộc châu",
-                                        price: "40k"
+                                        price: 40000
                                     },
                                     {
                                         name: "sữa thanh trùng",
-                                        price: "50k"
+                                        price: 50000
                                     }
                                 ],
                                 other: [
                                     {
                                         name: "kẹo cao su",
-                                        price: "10k"
+                                        price: 10000
                                     },
                                     {
                                         name: "lạc rang",
-                                        price: "15k"
+                                        price: 15000
                                     }
                                 ],
                             }

@@ -4,7 +4,6 @@ import thunk from 'redux-thunk'
 
 export default createStore(
     combineReducers({
-        order: orderReducer
-    }),
-    applyMiddleware(thunk)
+        order: orderReducer,
+    }), applyMiddleware(thunk)
 );
