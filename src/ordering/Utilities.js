@@ -4,17 +4,14 @@ import {
     Col,
     Row,
     Button,
-    Form,
-    FormGroup,
     Input,
-    Label,
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
 } from 'reactstrap';
 import {connect} from 'react-redux';
-import {changeVAT, changeDiscount} from 'actions/orderActions';
+import {changeVAT, changeDiscount, createBill} from 'actions/orderActions';
 
 
 class Utilities extends React.Component {
@@ -154,7 +151,8 @@ class Utilities extends React.Component {
                         <Button color={"warning"} className={"d-block"} block>Tạm tính</Button>
                     </Col>
                     <Col xs={4} className={"pl-1"}>
-                        <Button color={"danger"} className={"h-100"} block>Thanh Toán</Button>
+                        <Button color={"danger"} className={"h-100"} block
+                                onClick={()=>this.props.createBill(this.props.bill)}>Thanh Toán</Button>
                     </Col>
                 </Row>
             </div>
@@ -166,7 +164,7 @@ const mapStateToProps = (state) => {
     return {
         bill: state.order.bill,
         cost: state.order.cost,
-        total: state.order.total,
+        total: state.order.bill.totalPrice,
         VAT: state.order.vat,
         discount: state.order.discount,
     }
@@ -176,9 +174,12 @@ const mapDispatchToProps = (dispatch) => {
         changeVAT: (vat) => {
             dispatch(changeVAT(vat))
         },
-        changeDiscount: (event)=>{
+        changeDiscount: (event) => {
             dispatch(changeDiscount(event))
         },
+        createBill: (bill) => {
+            dispatch(createBill(bill))
+        }
     };
 };
 

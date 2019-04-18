@@ -31,10 +31,10 @@ export function changeDiscount(event) {
     payload: event.target.value
   };
 }
-export function addDrink(drink) {
+export function addProduct(product) {
   return {
-    type: "ADD_DRINK",
-    payload: drink
+    type: "ADD_PRODUCT",
+    payload: product
   };
 }
 export function getProducts() {
@@ -46,4 +46,14 @@ export function getProducts() {
       });
     })
   };
+}
+
+export function createBill(bill){
+  return function(dispatch){
+    axios.post("http://localhost:5000/create-bill", bill).then(res=>{
+      dispatch({
+        type: "BILL_CREATED",
+      });
+    })
+  }
 }

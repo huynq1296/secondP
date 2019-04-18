@@ -26,18 +26,18 @@ class Bill extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.bill.map(drink => {
+            {this.props.bill.map(product => {
               return (
-                <tr key={drink["name"]}>
+                <tr key={product["name"]}>
                   <td>
-                    <div>{drink["name"]}</div>
+                    <div>{product["name"]}</div>
                     <div className={"font-italic font-weight-light"}>
                       Ghi chu:
                       {(function() {
-                        if (drink["note"] == null) {
+                        if (product["note"] == null) {
                           return " " + "None";
                         } else {
-                          return " " + drink["note"];
+                          return " " + product["note"];
                         }
                       })()}
                     </div>
@@ -45,26 +45,26 @@ class Bill extends React.Component {
                   <td className={"text-center"}>
                     <Button
                       color={"link"}
-                      onClick={() => this.props.inc(drink)}
+                      onClick={() => this.props.inc(product)}
                     >
                       <i className={"fa fa-plus"} />
                     </Button>
-                    {drink["quantity"]}
+                    {product["quantity"]}
                     <Button
                       color={"link"}
-                      onClick={() => this.props.dec(drink)}
+                      onClick={() => this.props.dec(product)}
                     >
                       <i className={"fa fa-minus"} />
                     </Button>
                   </td>
-                  <td className={"text-center"}>{drink["price"]}</td>
+                  <td className={"text-center"}>{product["price"]}</td>
                   <td className={"text-center"}>
-                    <span>{drink["total"]}</span>
+                    <span>{product["total"]}</span>
                     <Button
                       className={"ml-1"}
                       size={"sm"}
                       color={"link"}
-                      onClick={() => this.props.remove(drink)}
+                      onClick={() => this.props.remove(product)}
                     >
                       <i className={"fa fa-trash"} />
                     </Button>
@@ -81,19 +81,19 @@ class Bill extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    bill: state.order.bill
+    bill: state.order.bill.items
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    remove: drink => {
-      dispatch(removeDrink(drink));
+    remove: product => {
+      dispatch(removeDrink(product));
     },
-    inc: drink => {
-      dispatch(increaseQuantity(drink));
+    inc: product => {
+      dispatch(increaseQuantity(product));
     },
-    dec: drink => {
-      dispatch(decreaseQuantity(drink));
+    dec: product => {
+      dispatch(decreaseQuantity(product));
     }
   };
 };

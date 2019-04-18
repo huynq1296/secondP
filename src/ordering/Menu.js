@@ -10,9 +10,13 @@ import {
     ListGroupItemText
 } from "reactstrap";
 import {connect} from "react-redux";
-import {addDrink, getProducts} from "actions/orderActions";
+import {addProduct, getProducts} from "actions/orderActions";
 
 class Menu extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     componentDidMount() {
         this.props.getProducts();
     }
@@ -37,35 +41,33 @@ class Menu extends React.Component {
                 <Row className={"pt-3"}>
                     <ListGroup className={"w-100"}>
                         {
-                            Object.keys(this.props.products).map((key) => {
-
+                            this.props.productType.map(type => {
                                 return (
-                                    [
-                                        <ListGroupItemHeading className={"mt-2"}>
-                                            {key}
-                                        </ListGroupItemHeading>,
-                                        <div>{
-                                            this.props.products[key].map(drink => {
-                                                return (
-                                                    <ListGroupItem
-                                                        key={drink["name"]}
-                                                        className={"d-flex w-100 align-items-center p-0 pl-2"}
+                                    <div>
+                                        <ListGroupItemHeading className={"mt-2"} key={1}>
+                                            {type}
+                                        </ListGroupItemHeading>
+                                        {
+                                            this.props.products.filter(product => product.type.type == type).map((product) => {
+                                            return (
+                                                <ListGroupItem
+                                                    key={product["name"]}
+                                                    className={"d-flex w-100 align-items-center p-0 pl-2"}
+                                                >
+                                                    <div>{product["name"]}</div>
+                                                    <div className={"MenuJs-price"}>{product["price"] / 1000}k
+                                                    </div>
+                                                    <Button
+                                                        color={"link"}
+                                                        className={"ml-auto"}
+                                                        onClick={() => this.props.addProduct(product)}
                                                     >
-                                                        <div>{drink["name"]}</div>
-                                                        <div className={"MenuJs-price"}>{drink["price"] / 1000}k
-                                                        </div>
-                                                        <Button
-                                                            color={"link"}
-                                                            className={"ml-auto"}
-                                                            onClick={() => this.props.addDrink(drink)}
-                                                        >
-                                                            Add
-                                                        </Button>
-                                                    </ListGroupItem>
-                                                );
-                                            })
-                                        }</div>
-                                    ]
+                                                        Add
+                                                    </Button>
+                                                </ListGroupItem>
+                                            )
+                                        })}
+                                    </div>
                                 )
                             })
                         }
@@ -79,12 +81,13 @@ class Menu extends React.Component {
 const mapStateToProps = state => {
     return {
         products: state.order.products,
+        productType: state.order.productType,
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
-        addDrink: drink => {
-            dispatch(addDrink(drink));
+        addProduct: product => {
+            dispatch(addProduct(product));
         },
 
         getProducts: () => {

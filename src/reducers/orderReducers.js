@@ -1,20 +1,24 @@
-import axios from 'axios';
-
 export default function orderReducer(state = {
+    productType: [],
     products: {},
-    bill: [],
+    bill: {
+        items: [],
+        totalPrice: 0,
+    },
     cost: 0,
     vat: 0,
     discount: 0,
     total: 0,
 }, action) {
+    let productType = state.productType;
     let products = state.products;
-    let bill = state.bill.slice();
+    let bill = state.bill;
     let temp_vat = 0;
     let temp_discount = 0;
+
     switch (action.type) {
         case "REMOVE_DRINK":
-            bill = state.bill.filter((elem) => {
+            bill.items = state.bill.items.filter((elem) => {
                 if (elem['name'] != action.payload['name']) {
                     return true;
                 } else {
@@ -23,73 +27,83 @@ export default function orderReducer(state = {
             });
             break;
         case "INCREASE_QUANTITY": {
-            let found = state['bill'].findIndex((elem) => {
+            let found = state.bill.items.findIndex((elem) => {
                 return elem["name"] == action.payload["name"];
             });
-            bill = state['bill'].slice();
-            bill[found]['quantity']++;
+            bill.items = state.bill.items.slice();
+            bill.items[found].quantity++;
             break;
         }
         case "DECREASE_QUANTITY": {
-            let found = state['bill'].findIndex((elem) => {
+            let found = state.bill.items.findIndex((elem) => {
                 return elem["name"] == action.payload["name"];
             });
-            bill = state['bill'].slice();
-            bill[found]['quantity']--;
+            bill.items = state.bill.items.slice();
+            bill.items[found].quantity--;
             break;
         }
-        case "CHANGE_VAT":{
-            if(action.payload == 0.1){
+        case "CHANGE_VAT": {
+            if (action.payload == 0.1) {
                 temp_vat = 0.1;
             }
-            if(action.payload == 0){
+            if (action.payload == 0) {
                 temp_vat = 0;
             }
             break;
         }
-        case "CHANGE_DISCOUNT":{
+        case "CHANGE_DISCOUNT": {
             temp_discount = action.payload;
             break;
         }
-        case "ADD_DRINK":{
-            let found = state['bill'].findIndex((elem) => {
+        case "ADD_PRODUCT": {
+            let found = state.bill.items.findIndex((elem) => {
                 return elem["name"] == action.payload["name"];
             });
-            if(found == -1){
-                bill = state['bill'].slice();
-                bill.push({
+            if (found == -1) {
+                bill.items = state.bill.items.slice();
+                bill.items.push({
+                    productId: action.payload._id,
                     name: action.payload.name,
-                    price: action.payload.price,
                     quantity: 1,
-                    total: 0,
+                    note: "",
+                    price: action.payload.price,
                 });
-            }
-            else{
-                bill = state['bill'].slice();
-                bill[found]['quantity']++;
+            } else {
+                bill.items = state.bill.items.slice();
+                bill.items[found].quantity++;
             }
             break;
         }
-        case "GET_PRODUCTS":{
+        case "GET_PRODUCTS": {
             products = action.payload;
+            products.forEach((product) => {
+                if (!productType.includes(product.type.type)) {
+                    productType.push(product.type.type);
+                }
+            });
+            break;
+        }
+        case "BILL_CREATED": {
+            bill.items = []
+            bill.totalPrice = 0;
             break;
         }
 
     }
-    bill.forEach((elem)=>{
+    bill.items.forEach((elem) => {
         elem.total = elem.price * elem.quantity;
     });
-    let temp_cost = bill.reduce(function (total, elem) {
-        total = total + elem['price'] * elem['quantity'];
+    let temp_cost = bill.items.reduce(function (total, elem) {
+        total = total + elem.price * elem.quantity;
         return total;
     }, 0);
-
+    bill.totalPrice = temp_cost + temp_cost * temp_vat - temp_discount * temp_cost * 0.01;
     return {
         ...state,
+        productType: productType,
         products: products,
         bill: bill,
         cost: temp_cost,
-        total: temp_cost + temp_cost * temp_vat  - temp_discount * temp_cost * 0.01,
         vat: temp_vat,
         discount: temp_discount,
     };
