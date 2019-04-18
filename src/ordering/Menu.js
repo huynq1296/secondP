@@ -7,10 +7,9 @@ import {
     ListGroup,
     ListGroupItem,
     ListGroupItemHeading,
-    ListGroupItemText
 } from "reactstrap";
 import {connect} from "react-redux";
-import {addProduct, getProducts} from "actions/orderActions";
+import {addProduct, getProducts, getProductTypes} from "actions/orderActions";
 
 class Menu extends React.Component {
     constructor(props) {
@@ -18,6 +17,7 @@ class Menu extends React.Component {
     }
 
     componentDidMount() {
+        this.props.getProductTypes();
         this.props.getProducts();
     }
 
@@ -43,15 +43,15 @@ class Menu extends React.Component {
                         {
                             this.props.productType.map(type => {
                                 return (
-                                    <div>
-                                        <ListGroupItemHeading className={"mt-2"} key={1}>
-                                            {type}
+                                    <div key={type._id}>
+                                        <ListGroupItemHeading className={"mt-2"}>
+                                            {type.type}
                                         </ListGroupItemHeading>
                                         {
-                                            this.props.products.filter(product => product.type.type == type).map((product) => {
+                                            this.props.products.filter(product => product.type.type == type.type).map((product) => {
                                             return (
                                                 <ListGroupItem
-                                                    key={product["name"]}
+                                                    key={product["_id"]}
                                                     className={"d-flex w-100 align-items-center p-0 pl-2"}
                                                 >
                                                     <div>{product["name"]}</div>
@@ -92,6 +92,9 @@ const mapDispatchToProps = dispatch => {
 
         getProducts: () => {
             dispatch(getProducts());
+        },
+        getProductTypes: () => {
+            dispatch(getProductTypes());
         }
     };
 };

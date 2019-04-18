@@ -76,19 +76,20 @@ export default function orderReducer(state = {
         }
         case "GET_PRODUCTS": {
             products = action.payload;
-            products.forEach((product) => {
-                if (!productType.includes(product.type.type)) {
-                    productType.push(product.type.type);
-                }
-            });
             break;
+        }
+
+        case "GET_PRODUCT_TYPE": {
+            action.payload.map(elem =>{
+                productType.push(elem);
+            });
+            console.log(productType);
         }
         case "BILL_CREATED": {
             bill.items = []
             bill.totalPrice = 0;
             break;
         }
-
     }
     bill.items.forEach((elem) => {
         elem.total = elem.price * elem.quantity;

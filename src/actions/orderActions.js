@@ -47,6 +47,16 @@ export function getProducts() {
     })
   };
 }
+export function getProductTypes(){
+  return function(dispatch){
+    axios.get("http://localhost:5000/product-type").then(res=>{
+      dispatch({
+        type: "GET_PRODUCT_TYPE",
+        payload: res.data,
+      });
+    })
+  }
+}
 
 export function createBill(bill){
   return function(dispatch){
