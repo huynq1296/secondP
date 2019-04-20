@@ -67,12 +67,10 @@ export default class NavigationBar extends React.Component {
               </ButtonGroup>
             </Col>
             <Col xs={5} className={"h-100 d-flex"}>
-              <NavItem className={"NavItem d-flex align-items-center"}>
-                <Form className={""}>
+              <NavItem className={"NavItem d-flex align-items-center w-100"}>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
-                        {" "}
                         <i className={"fa fa-search"} />
                       </InputGroupText>
                     </InputGroupAddon>
@@ -83,7 +81,6 @@ export default class NavigationBar extends React.Component {
                       className={"p-0"}
                     />
                   </InputGroup>
-                </Form>
               </NavItem>
               <ButtonGroup id={"Navbar-buttonGroup-1"} className={"ml-auto"}>
                 <NavItem className={"NavItem d-flex align-items-center"}>
